@@ -1,5 +1,6 @@
 package com.exostar.userprofile.service;
 
+import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,5 +14,9 @@ public class UserService {
 
     public Optional<UserEntity> findByUserEmail(String email) {
         return Optional.ofNullable(userDAO.findByEmail(email));
+    }
+
+    public List<UserEntity> findByFirstName(String firstName) {
+        return userDAO.findByFirstName(firstName);
     }
 }

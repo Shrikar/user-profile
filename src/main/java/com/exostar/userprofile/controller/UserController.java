@@ -1,5 +1,6 @@
 package com.exostar.userprofile.controller;
 
+import java.util.List;
 import java.util.Optional;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +18,17 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping (method = RequestMethod.GET)
+    @RequestMapping (value = "/email", method = RequestMethod.GET)
     public ResponseEntity<UserEntity> getUserByEmail(@Valid @RequestParam (name = "email") String email) {
         Optional<UserEntity> userEntityOptional = userService.findByUserEmail(email);
         if (userEntityOptional.isPresent()) {
             return ResponseEntity.ok(userEntityOptional.get());
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @RequestMapping (value = "firstName", method = RequestMethod.GET)
+    public ResponseEntity<List<UserEntity>> findByFirstName(@Valid @RequestParam (name = "firstName") String firstName) {
+        return ResponseEntity.ok(userService.findByFirstName(firstName));
     }
 }

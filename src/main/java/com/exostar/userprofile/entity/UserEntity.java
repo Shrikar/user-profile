@@ -2,6 +2,7 @@ package com.exostar.userprofile.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -26,6 +27,7 @@ public class UserEntity extends BaseEntity implements Serializable {
 
     private String lastName;
 
+    @Column(unique = true)
     private String email;
 
     private Date dateOfBirth;

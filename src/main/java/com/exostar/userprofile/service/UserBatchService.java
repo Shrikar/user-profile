@@ -20,10 +20,13 @@ import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileUrlResource;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import com.exostar.userprofile.Exception.IllegalCountryCodeException;
 import com.exostar.userprofile.Exception.IllegalDateException;
 import com.exostar.userprofile.VO.UserView;
+import com.exostar.userprofile.batch.listener.UserRecordSkipListener;
+import com.exostar.userprofile.batch.listener.UserRecordWriteListener;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -64,7 +67,9 @@ public class UserBatchService {
     private Step getStep(String fileName) throws MalformedURLException {
         itemReader.setResource(new FileUrlResource(fileName));
         return stepBuilderFactory.get("step").<UserView, UserView> chunk(5).processor(processor).reader(itemReader).writer(itemWriter).faultTolerant()
-                                                                           .skip(IllegalDateException.class).skip(ParseException.class)
-                                                                           .skip(IllegalCountryCodeException.class).skipLimit(Integer.MAX_VALUE).build();
+                                                                           .listener(new UserRecordSkipListener()).skip(IllegalDateException.class)
+                                                                           .skip(ParseException.class).skip(IllegalCountryCodeException.class)
+                                                                           .skip(DuplicateKeyException.class)
+                                                                           .skipLimit(Integer.MAX_VALUE).listener(new UserRecordWriteListener()).build();
     }
 }
